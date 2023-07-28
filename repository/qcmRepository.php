@@ -4,7 +4,6 @@ class QcmRepository
 {
     private PDO $db;
 
-
     public function __construct(PDO $db)
     {
         $this->setDb($db);
@@ -25,20 +24,20 @@ class QcmRepository
     }
 
 
-    public function getQuestions(): array
+    // METHOD
+    public function getQcmByTheme($theme): Qcm
     {
-        $query = 'SELECT * FROM question';
-        $result = $this->db->query($query);
-        $questionDatas = $result->fetchAll();
-        // var_dump($questionDatas);
-        $questions = [];
+        $request = $this->db->prepare(
+            'SELECT * FROM qcm 
+            WHERE theme = :theme'
+        );
+        $request->execute([
+            ':theme' => $theme
+        ]);
+        
+        $qcmDatas = $request->fetch();
+        $qcm = new Qcm($qcmDatas, $this->getDb());
 
-        foreach ($questionDatas as $questionData) {
-            $questions[] = new Question($questionData['content']);
-            var_dump($questions);
-        }
-
-        return $questions;
+        return $qcm;
     }
-
 }

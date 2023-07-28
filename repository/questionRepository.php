@@ -4,7 +4,6 @@ class QuestionRepository
 {
     private PDO $db;
 
-
     public function __construct(PDO $db)
     {
         $this->setDb($db);
@@ -25,18 +24,24 @@ class QuestionRepository
     }
 
 
-    public function getQuestions(): array
+    // METHODS
+    public function getQuestionsByIdQcm($id_qcm): array
     {
-        $query = 'SELECT * FROM qcm';
-        $result = $this->db->query($query);
-        $questionDatas = $result->fetchAll();
+        $request = $this->db->prepare(
+            'SELECT * FROM question 
+            WHERE id_qcm = :id_qcm'
+        );
+        $request->execute([
+            ':id_qcm' => $id_qcm
+        ]);
+        
+        $questionDatas = $request->fetchAll();
         $questions = [];
 
         foreach ($questionDatas as $questionData) {
-            $questions[] = new Qcm($questionData);
+            $questions[] = new Question($questionData, $this->getDb());
         }
 
         return $questions;
     }
-
 }

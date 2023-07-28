@@ -5,14 +5,10 @@ class Answer
     private int $id;
     private string $content;
     private bool $isCorrect;
-    const BONNE_REPONSE = true;
-    const MAUVAISE_REPONSE = false;
-    private int $id_question;
 
-    public function __construct(string $content, bool $isCorrect = self::MAUVAISE_REPONSE)
+    public function __construct(array $datas)
     {
-        $this->setContent($content);
-        $this->setIsCorrect($isCorrect);
+        $this->hydrate($datas);
     }
 
 
@@ -20,6 +16,13 @@ class Answer
     public function getId()
     {
         return $this->id;
+    }
+
+    // SET id
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     // GET content
@@ -48,24 +51,22 @@ class Answer
         return $this;
     }
 
-    // GET id_question
-    public function getId_question()
-    {
-        return $this->id_question;
-    }
-
-    // SET id_question
-    public function setId_question($id_question)
-    {
-        $this->id_question = $id_question;
-        return $this;
-    }
-
-
+    
     // METHODS
-    public function putCorrect($true)
+    public function hydrate(array $datas)
     {
-        $this->setIsCorrect($true);
+      if(isset($datas["id"])) {
+        $this->setId($datas["id"]);
+      }
+
+      if(isset($datas["content"])) {
+        $this->setContent($datas["content"]);
+      }
+
+      if(isset($datas["isCorrect"])) {
+        $this->setIsCorrect($datas["isCorrect"]);
+      }
     }
+
 
 }

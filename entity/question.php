@@ -4,13 +4,15 @@ class Question
 {
     private int $id;
     private string $content;
-    private array $answers;
     private string $explanation;
-    private int $id_qcm;
+    private array $answers;
+    private AnswerRepository $answerRepository;
 
-    public function __construct(string $content)
+    public function __construct(array $datas, PDO $db)
     {
-        $this->setContent($content);
+        $this->hydrate($datas);
+        $this->setAnswerRepository(($db));
+        $this->setAnswers($this->getAnswerRepository()->getAnswersByIdQuestion($this->id));
     }
 
 
@@ -18,6 +20,13 @@ class Question
     public function getId()
     {
         return $this->id;
+    }
+    
+    // SET id
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     // GET content
@@ -42,7 +51,7 @@ class Question
     // SET answers
     public function setAnswers($answers)
     {
-        $this->answers[] = $answers;
+        $this->answers = $answers;
         return $this;
     }
 
@@ -59,26 +68,33 @@ class Question
         return $this;
     }
 
-    // GET id_qcm
-    public function getId_qcm()
+    // GET answerRepo
+    public function getAnswerRepository()
     {
-        return $this->id_qcm;
+        return $this->answerRepository;
     }
 
-    // SET id_qcm
-    public function setId_qcm($id_qcm)
+    // SET answerRepo 
+    public function setAnswerRepository(PDO $db)
     {
-        $this->id_qcm = $id_qcm;
+        $this->answerRepository = new AnswerRepository($db);
         return $this;
     }
 
 
     // METHODS
-    public function addAnswer(Answer $objectAnswer)
+    public function hydrate(array $datas)
     {
-        $this->setAnswers($objectAnswer);
-    }
-    
+        if (isset($datas["id"])) {
+            $this->setId($datas["id"]);
+        }
 
-    
+        if (isset($datas["content"])) {
+            $this->setContent($datas["content"]);
+        }
+
+        if (isset($datas["explanation"])) {
+            $this->setExplanation($datas["explanation"]);
+        }
+    }
 }

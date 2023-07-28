@@ -1,7 +1,8 @@
 <?php
 
-require_once('utils/loadClass.php');
-require_once('utils/db_connect.php');
+// require_once('utils/loadClass.php');
+// require_once('utils/db_connect.php');
+include_once('./controller/homepage.php');
 
 ///////////////// PARTIE 1
 
@@ -16,6 +17,24 @@ require_once('utils/db_connect.php');
 // $qcm->displayQuestions();
 
 ///////////////// PARTIE 2
+?>
 
-$test = new QcmRepository($db);
-$test->getQuestions();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <main>
+        <?php generateQuizz('classic', $db); ?>
+    </main>
+    
+</body>
+</html>
+
+
+
+
